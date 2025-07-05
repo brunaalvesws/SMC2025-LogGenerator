@@ -1,0 +1,183 @@
+<div class="container">
+  <div class="log-generator-card">
+    <!-- Header -->
+    <div class="card-header">
+      <h2 class="card-title">Multi-perspective log generator</h2>
+      <p class="card-description">Upload your models and configure log generation parameters</p>
+    </div>
+    
+    <!-- Content -->
+    <div class="card-content">
+      <!-- Upload Models Section -->
+      <div class="section">
+        <h3 class="section-title">Upload Models</h3>
+        <div class="grid grid-cols-1 grid-cols-md-3">
+          <!-- DECLARE Model -->
+          <div class="upload-section">
+            <label for="declare-model" class="upload-label">DECLARE model</label>
+            <div class="upload-button-container">
+              <input
+                id="declare-model"
+                type="file"
+                class="hidden-input"
+                (change)="handleFileChange($event, 'declare')"
+              />
+              <button 
+                (click)="onFileInputClick('declare-model')"
+                class="upload-button"
+              >
+                <div class="upload-button-content">
+                  <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <span class="upload-text">Upload</span>
+                  <span class="upload-text">DECLARE model</span>
+                </div>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Organizational Model -->
+          <div class="upload-section">
+            <label for="org-model" class="upload-label">Organizational model</label>
+            <div class="upload-button-container">
+              <input
+                id="org-model"
+                type="file"
+                class="hidden-input"
+                (change)="handleFileChange($event, 'org')"
+              />
+              <button 
+                (click)="onFileInputClick('org-model')"
+                class="upload-button"
+              >
+                <div class="upload-button-content">
+                  <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <span class="upload-text">Upload</span>
+                  <span class="upload-text">Organizational model</span>
+                </div>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Access Restriction Model -->
+          <div class="upload-section">
+            <label for="access-model" class="upload-label">Access Restriction model</label>
+            <div class="upload-button-container">
+              <input
+                id="access-model"
+                type="file"
+                class="hidden-input"
+                (change)="handleFileChange($event, 'access')"
+              />
+              <button 
+                (click)="onFileInputClick('access-model')"
+                class="upload-button"
+              >
+                <div class="upload-button-content">
+                  <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <span class="upload-text">Upload</span>
+                  <span class="upload-text">Access Restriction model</span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Log Configuration Section -->
+      <div class="section">
+        <h3 class="section-title">Log Configuration</h3>
+        <div class="grid grid-cols-1 grid-cols-md-3">
+          <div class="input-group">
+            <label for="traces" class="input-label">Number of traces</label>
+            <input
+              id="traces"
+              type="number"
+              min="1"
+              [(ngModel)]="traces"
+              class="form-input"
+            />
+          </div>
+          <div class="input-group">
+            <label for="min-events" class="input-label">Minimum number of events</label>
+            <input
+              id="min-events"
+              type="number"
+              min="1"
+              [(ngModel)]="minEvents"
+              (change)="onMinEventsChange($event)"
+              class="form-input"
+            />
+          </div>
+          <div class="input-group">
+            <label for="max-events" class="input-label">Maximum number of events</label>
+            <input
+              id="max-events"
+              type="number"
+              [min]="minEvents"
+              [(ngModel)]="maxEvents"
+              class="form-input"
+            />
+          </div>
+        </div>
+      </div>
+      
+      <!-- Activity Customization Section -->
+      <div class="section">
+        <button 
+          type="button" 
+          class="toggle-button"
+          (click)="toggleActivities()"
+        >
+          <span>Customize activity duration</span>
+          <svg *ngIf="showActivities" class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+          </svg>
+          <svg *ngIf="!showActivities" class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        
+        <div *ngIf="showActivities" class="activity-panel">
+          <div class="activity-header">
+            <h4 class="activity-header-title">Activity Name</h4>
+            <h4 class="activity-header-title">Activity Durations (hours)</h4>
+          </div>
+          
+          <div *ngFor="let activity of activities; let i = index" class="activity-row">
+            <label [for]="'activity-' + i" class="activity-name">
+              {{ activity.name }}
+            </label>
+            <input
+              [id]="'activity-' + i"
+              type="number"
+              min="1"
+              step="1"
+              [value]="activity.duration"
+              (change)="handleDurationChange(i, $event)"
+              class="form-input"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="card-footer">
+      <button class="generate-button">
+        Generate Log
+      </button>
+    </div>
+  </div>
+</div>
