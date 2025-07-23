@@ -20,7 +20,7 @@
                 id="declare-model"
                 type="file"
                 class="hidden-input"
-                (change)="handleFileChange($event, 'declare')"
+                (change)="onFileSelected($event)"
               />
               <button 
                 (click)="onFileInputClick('declare-model')"
@@ -36,6 +36,9 @@
                   <span class="upload-text">DECLARE model</span>
                 </div>
               </button>
+            </div>
+            <div *ngIf="arquivoDeclare">
+              <label class="input-label">File chosen: {{ arquivoDeclare }}</label>
             </div>
           </div>
           
@@ -64,6 +67,9 @@
                 </div>
               </button>
             </div>
+            <div *ngIf="arquivoAcesso">
+              <label class="input-label">File chosen: {{ arquivoAcesso }}</label>
+            </div>
           </div>
           
           <!-- Access Restriction Model -->
@@ -91,6 +97,9 @@
                 </div>
               </button>
             </div>
+          </div>
+          <div *ngIf="arquivoOrganizacional">
+              <label class="input-label">File chosen: {{ arquivoOrganizacional }}</label>
           </div>
         </div>
       </div>
@@ -140,8 +149,8 @@
           class="toggle-button"
           (click)="toggleActivities()"
         >
-          <span>Customize activity duration</span>
-          <svg *ngIf="showActivities" class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <span>Click to customize activity duration</span>
+           <svg *ngIf="showActivities" class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="18 15 12 9 6 15"></polyline>
           </svg>
           <svg *ngIf="!showActivities" class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -150,12 +159,13 @@
         </button>
         
         <div *ngIf="showActivities" class="activity-panel">
-          <div class="activity-header">
+          <div class="activity-header-extended">
             <h4 class="activity-header-title">Activity Name</h4>
-            <h4 class="activity-header-title">Activity Durations (hours)</h4>
+            <h4 class="activity-header-title">Minimum Duration (hours)</h4>
+            <h4 class="activity-header-title">Maximum Duration (hours)</h4>
           </div>
           
-          <div *ngFor="let activity of activities; let i = index" class="activity-row">
+          <div *ngFor="let activity of activities; let i = index" class="activity-row-extended">
             <label [for]="'activity-' + i" class="activity-name">
               {{ activity.name }}
             </label>
@@ -164,8 +174,17 @@
               type="number"
               min="1"
               step="1"
-              [value]="activity.duration"
-              (change)="handleDurationChange(i, $event)"
+              [value]="activity.min_duration"
+              (change)="handleMinDurationChange(i, $event)"
+              class="form-input"
+            />
+            <input
+              [id]="'activity-' + i"
+              type="number"
+              min="1"
+              step="1"
+              [value]="activity.max_duration"
+              (change)="handleMaxDurationChange(i, $event)"
               class="form-input"
             />
           </div>
@@ -175,7 +194,7 @@
     
     <!-- Footer -->
     <div class="card-footer">
-      <button class="generate-button">
+      <button class="generate-button" (click)="downloadCSV()">
         Generate Log
       </button>
     </div>

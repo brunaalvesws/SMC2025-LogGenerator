@@ -265,6 +265,21 @@ body {
   color: #111827;
 }
 
+.activity-header-extended {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.activity-row-extended {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
 .activity-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -281,6 +296,47 @@ body {
   font-weight: 400;
   font-size: 0.9rem;
   color: #374151;
+}
+
+@media (max-width: 767px) {
+  .grid-cols-md-3 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .activity-header-extended {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .activity-row-extended {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .activity-header-title {
+    font-size: 0.75rem;
+  }
+
+  .upload-button {
+    font-size: 0.75rem;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .card-content {
+    padding: 1rem;
+  }
+
+  .card-header {
+    padding: 1rem;
+  }
+
+  .card-footer {
+    padding: 1rem;
+  }
+
+  .log-generator-card {
+    max-width: 100%;
+  }
 }
 
 /* Footer */
