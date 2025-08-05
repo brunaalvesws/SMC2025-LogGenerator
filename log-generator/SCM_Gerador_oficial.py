@@ -38,6 +38,11 @@ df['concept:name'].value_counts()
 df_equipes = pd.read_csv('./GeradorLog/Resource_model_example.csv', sep=";")
 equipes = df_equipes.to_dict(orient='list')
 
+equipes = { 
+    case: [r.strip() for r in recursos.split(',')]
+    for case, recursos in zip(equipes['case:concept:name'], equipes['concept:resources'])
+}
+
 print(equipes)
 
 
@@ -47,7 +52,7 @@ df['concept:instance'] = 0
 
 
 for i in df['case:concept:name'].unique():
-  equipe = random.choice(list(equipes.keys()))
+  equipe = random.choice(list(equipes.keys())) ##não deve existir 
   df.loc[df['case:concept:name'] == i, 'concept:team'] = equipe
 
 print(df)
