@@ -15,10 +15,11 @@ model_name = 'LogGeradorMP'
 model: DeclareModel = DeclareModel().parse_from_file('./GeradorLog/Declare_model_example.decl')
 
 # Number of cases that have be generated
-num_of_cases = 3
+num_of_cases = int(input())
 
 # Minimum and maximum number of events a case can contain
-(num_min_events, num_max_events) = (20, 50)
+num_min_events = int(input())
+num_max_events = int(input())
 
 
 asp_gen: AspGenerator = AspGenerator(model, num_of_cases, num_min_events, num_max_events)
@@ -52,8 +53,7 @@ df['concept:instance'] = 0
 
 
 for i in df['case:concept:name'].unique():
-  equipe = random.choice(list(equipes.keys())) ##não deve existir 
-  df.loc[df['case:concept:name'] == i, 'concept:team'] = equipe
+    df.loc[df['case:concept:name'] == i, 'concept:team'] = i
 
 print(df)
 
@@ -68,7 +68,12 @@ for index, row in df.iterrows():
         demanda = row['case:concept:name']
         id_instancia = 1
     equipe = row['concept:team']
-    recurso = random.choice(equipes[equipe])
+    #####
+    if equipe in equipes:
+       recurso = random.choice(equipes[equipe])
+    else:
+       recurso = ''
+    #####
     df.at[index, 'concept:resource'] = recurso
     df.at[index, 'concept:instance'] = id_instancia
     timestamp_inicio = pd.to_datetime(row['time:timestamp'])
