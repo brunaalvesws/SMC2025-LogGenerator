@@ -52,35 +52,17 @@ df['concept:resource'] = ''
 df['concept:instance'] = 0
 
 
-for i in df['case:concept:name'].unique():
-    df.loc[df['case:concept:name'] == i, 'concept:team'] = i
-
+df['concept:team'] = df['case:concept:name']
+df['concept:instance'] = df.groupby('case:concept:name').cumcount() + 1
+df['concept:team'] = df['case:concept:name'].apply(lambda c: c.zfill(2) if c.startswith('case_') else c)
+df['timestamp_inicio'] = pd.to_datetime(df['time:timestamp'])
+df['time:timestamp'] = df['timestamp_inicio'] + pd.Timedelta(hours=2)
+df_begin = df.copy()
+df_begin['time:timestamp'] = df_begin['timestamp_inicio']
+df_begin['concept:name'] = 'begin'
+df = pd.concat([df, df_begin], ignore_index=True).drop(columns=['timestamp_inicio'])
 print(df)
 
-id_instancia = 1
-demanda = ''
-
-# Iterando pelas linhas do DataFrame com iterrows
-for index, row in df.iterrows():
-    if demanda == '':
-        demanda = row['case:concept:name']
-    if demanda != row['case:concept:name']:
-        demanda = row['case:concept:name']
-        id_instancia = 1
-    equipe = row['concept:team']
-    #####
-    if equipe in equipes:
-       recurso = random.choice(equipes[equipe])
-    else:
-       recurso = ''
-    #####
-    df.at[index, 'concept:resource'] = recurso
-    df.at[index, 'concept:instance'] = id_instancia
-    timestamp_inicio = pd.to_datetime(row['time:timestamp'])
-    timestamp_final = pd.to_datetime(row['time:timestamp']) + pd.Timedelta(hours=2)
-    df.at[index, 'time:timestamp'] = timestamp_final
-    df.loc[len(df)] = [timestamp_inicio, 'begin', row['concept:name'],	row['case:concept:name'], row['concept:team'],	recurso, id_instancia]
-    id_instancia += 1
 
 
 df_ordenado = df.sort_values(['case:concept:name', 'concept:instance', 'lifecycle:transition'])
