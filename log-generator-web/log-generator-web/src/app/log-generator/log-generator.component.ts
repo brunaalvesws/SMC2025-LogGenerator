@@ -25,6 +25,7 @@ export class LogGeneratorComponent implements OnInit{
   arquivoDeclare: File | null = null;
   arquivoAcesso: File | null = null;
   arquivoOrganizacional: File | null = null;
+  loading = false
 
   activities: Activity[] = []
 
@@ -133,17 +134,25 @@ export class LogGeneratorComponent implements OnInit{
 
           if (this.findInvalidActivities(this.activities).length == 0) {
             formData.append('activities', JSON.stringify(this.activities));
+            this.loading = true;
 
             this.http.post('http://localhost:5000/generate', formData, { 
               responseType: 'blob',
               params: params  
-            }).subscribe(blob => {
+            }).subscribe({next: (blob) => {
               const url = window.URL.createObjectURL(blob);
               const a = document.createElement('a');
               a.href = url;
               a.download = 'generated_logs.zip';
               a.click();
               window.URL.revokeObjectURL(url);
+
+              this.loading = false;
+            },
+            error: (err) => {
+              alert(err.message);
+              this.loading = false; 
+            }
             });
           } else {
             const names = this.findInvalidActivities(this.activities).map(a => a.name).join(', ');
