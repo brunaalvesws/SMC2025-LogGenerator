@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 
@@ -22,9 +22,9 @@ export class LogGeneratorComponent implements OnInit{
   maxEvents = 1000
   showActivities = false
   declareModel = ''
-  arquivoDeclare = ''
-  arquivoAcesso = ''
-  arquivoOrganizacional = ''
+  arquivoDeclare: File | null = null;
+  arquivoAcesso: File | null = null;
+  arquivoOrganizacional: File | null = null;
 
   activities: Activity[] = []
 
@@ -34,10 +34,6 @@ export class LogGeneratorComponent implements OnInit{
 
   toggleActivities(): void {
     this.showActivities = !this.showActivities
-  }
-
-  handleFileChange(event: any, fileType: string): void {
-    console.log(fileType, event.target.files)
   }
 
   parseActivities(text: string): Activity[] {
@@ -57,12 +53,12 @@ export class LogGeneratorComponent implements OnInit{
     return activities;
   }
 
-  onFileSelected(event: Event) {
+  onDeclareFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (file) {
       const reader = new FileReader();
-      this.arquivoDeclare = file.name;
+      this.arquivoDeclare = file;
       reader.onload = () => {
         this.declareModel = reader.result as string;
         this.activities = this.parseActivities(this.declareModel);
@@ -73,6 +69,24 @@ export class LogGeneratorComponent implements OnInit{
 
   onFileInputClick(inputId: string): void {
     document.getElementById(inputId)?.click()
+  }
+
+  onResourceFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      this.arquivoOrganizacional = file;
+    }
+  }
+
+  onAccessFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      this.arquivoAcesso = file;
+    }
   }
 
   handleMinDurationChange(index: number, event: any): void {
@@ -99,19 +113,50 @@ export class LogGeneratorComponent implements OnInit{
     }
   }
 
+  findInvalidActivities(activities: Activity[]): Activity[] {
+    return activities.filter(activity => activity.max_duration < activity.min_duration);
+  }
+
+
   downloadCSV() {
     const formData = new FormData();
-    formData.append('files', 'arquivos'); 
-    this.http.post('http://localhost:5000/generate-csv', formData, { //colocar isso aqui depois que apertar o botão
-      responseType: 'blob'  
-    }).subscribe(blob => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'resultado.csv';
-      a.click();
-      window.URL.revokeObjectURL(url);
-    });
+    if (this.arquivoDeclare != null && this.arquivoOrganizacional != null && this.arquivoAcesso != null) {
+      formData.append('declare', this.arquivoDeclare!); 
+      formData.append('organizational', this.arquivoOrganizacional!); 
+      formData.append('access', this.arquivoAcesso!); 
+
+      if (this.maxEvents > 0 && this.traces > 0 && this.minEvents > 0 && this.minEvents <= this.maxEvents) {
+        const params = new HttpParams()
+          .set('maxEvents', this.maxEvents)
+          .set('minEvents', this.minEvents)
+          .set('traces', this.traces);
+
+          if (this.findInvalidActivities(this.activities).length == 0) {
+            formData.append('activities', JSON.stringify(this.activities));
+
+            this.http.post('http://localhost:5000/generate', formData, { 
+              responseType: 'blob',
+              params: params  
+            }).subscribe(blob => {
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'generated_logs.zip';
+              a.click();
+              window.URL.revokeObjectURL(url);
+            });
+          } else {
+            const names = this.findInvalidActivities(this.activities).map(a => a.name).join(', ');
+            alert(`The following activities have minimum duration greater than maximum duration: ${names}. Fix that before trying again.`)
+          }
+
+      } else {
+        alert('Number of Traces, Minimum number of events and Maximum number of events must be greater than 0.')
+      }
+
+    } else {
+      alert('You must upload a DECLARE model, an organizational model and a access model to generate the log')
+    }
   }
 
 }
