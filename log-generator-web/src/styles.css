@@ -5,3 +5,88 @@
 body {
   font-family: 'Inter', sans-serif;
 }
+
+/* CSS Reset and Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  color: #374151;
+  background-color: #f9fafb;
+}
+
+/* SVG Icons */
+.upload-icon svg,
+.chevron-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Focus and Accessibility */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+  .grid-cols-md-3 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .upload-button {
+    font-size: 0.75rem;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .card-content {
+    padding: 1rem;
+  }
+
+  .card-header {
+    padding: 1rem;
+  }
+
+  .card-footer {
+    padding: 1rem;
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spinner {
+  border: 6px solid #f3f3f3; 
+  border-top: 6px solid #3498db; 
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
