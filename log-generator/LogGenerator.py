@@ -50,7 +50,7 @@ def generate(cases, min_events, max_events, activities_duration, declare_model, 
       return resource_chosen
   
   unique_cases = set(df['case:concept:name'].unique())
-  if unique_cases != resources.keys():
+  if unique_cases != set(resources.keys()):
     raise KeyError('The cases to be generated must be specified on Resource model, take a look if the Resource model is following the name pattern or if the number of cases to be generated is in accordance with the cases specified on the model.')
   df['concept:resource'] = df['case:concept:name'].apply(set_resource)
   df['concept:instance'] = df.groupby('case:concept:name').cumcount() + 1
@@ -73,7 +73,7 @@ def generate(cases, min_events, max_events, activities_duration, declare_model, 
   data_objects = df_activity_access["Data Objects"].tolist()
   
   unique_cases = set(df_reindexed['concept:name'].unique())
-  if unique_cases != activities:
+  if unique_cases != set(activities):
     raise KeyError('There are specified activities on Declare model that were not in Access model, please take a look on the Access model to fix it')
 
   activities_access = {}
