@@ -2,4 +2,5 @@ Flask
 flask-cors
 pm4py
 pandas
+gunicorn
 Declare4Py
