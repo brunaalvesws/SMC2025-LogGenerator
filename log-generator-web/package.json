@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build && npm run purge",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "purge": "purgecss --css src/styles.css --content src/**/*.html src/**/*.ts --output src/"
   },
   "private": true,
   "dependencies": {
@@ -33,6 +34,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "purge": "^1.0.0",
     "typescript": "~5.4.2"
   }
 }
