@@ -2,7 +2,6 @@ import zipfile
 from flask import Flask, request, send_file , jsonify
 from flask_cors import CORS  
 import io
-import csv
 import LogGenerator
 import tempfile
 import json

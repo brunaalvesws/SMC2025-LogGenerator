@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 interface Activity {
   name: string
@@ -136,7 +137,7 @@ export class LogGeneratorComponent implements OnInit{
             formData.append('activities', JSON.stringify(this.activities));
             this.loading = true;
 
-            this.http.post('http://127.0.0.1:5000/generate', formData, { 
+            this.http.post(`${environment.apiUrl}/generate`, formData, { 
               responseType: 'blob',
               params: params  
             }).subscribe({next: (blob) => {
