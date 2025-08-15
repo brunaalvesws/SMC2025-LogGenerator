@@ -136,7 +136,7 @@ export class LogGeneratorComponent implements OnInit{
             formData.append('activities', JSON.stringify(this.activities));
             this.loading = true;
 
-            this.http.post('http://localhost:5000/generate', formData, { 
+            this.http.post('http://127.0.0.1:5000/generate', formData, { 
               responseType: 'blob',
               params: params  
             }).subscribe({next: (blob) => {
@@ -150,8 +150,22 @@ export class LogGeneratorComponent implements OnInit{
               this.loading = false;
             },
             error: (err) => {
-              alert(err.message);
               this.loading = false; 
+
+              if (err.error instanceof Blob) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                  try {
+                    const json = JSON.parse(reader.result as string);
+                    alert(json.message); 
+                  } catch {
+                    console.error('Unknown error:', reader.result);
+                  }
+                };
+                reader.readAsText(err.error);
+              } else {
+                alert(err.error?.message || 'Unexpected Error');
+              }
             }
             });
           } else {

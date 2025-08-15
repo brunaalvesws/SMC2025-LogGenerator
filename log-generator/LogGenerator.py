@@ -4,7 +4,6 @@ from Declare4Py.ProcessMiningTasks.ASPLogGeneration.asp_generator import AspGene
 from pm4py.objects.conversion.log import converter as xes_converter
 import random
 import pandas as pd
-import jsonify
 
 def generate(cases, min_events, max_events, activities_duration, declare_model, resource_model, access_model):
 
@@ -30,8 +29,6 @@ def generate(cases, min_events, max_events, activities_duration, declare_model, 
   df = xes_converter.apply(log, variant=xes_converter.Variants.TO_DATA_FRAME)
   df.drop('case:label', axis=1, inplace=True)
 
-  df['concept:name'].value_counts()
-
   ## Resources ##
   df_resources= pd.read_csv(resource_model, sep=";")
   resources = df_resources.to_dict(orient='list')
@@ -49,13 +46,12 @@ def generate(cases, min_events, max_events, activities_duration, declare_model, 
     return pd.Timedelta(hours=random.randint(min_dur, max_dur))
   
   def set_resource(case):
-    try:
       resource_chosen = random.choice(resources[case])
       return resource_chosen
-    except Exception:
-      return jsonify({"message": f"The case {case} does not exist on the generated log, please take a look on the Resource model"}), 500
-      
-
+  
+  unique_cases = set(df['case:concept:name'].unique())
+  if unique_cases != resources.keys():
+    raise KeyError('The cases to be generated must be specified on Resource model, take a look if the Resource model is following the name pattern or if the number of cases to be generated is in accordance with the cases specified on the model.')
   df['concept:resource'] = df['case:concept:name'].apply(set_resource)
   df['concept:instance'] = df.groupby('case:concept:name').cumcount() + 1
   df['timestamp_begin'] = pd.to_datetime(df['time:timestamp'])
@@ -75,7 +71,10 @@ def generate(cases, min_events, max_events, activities_duration, declare_model, 
   df_activity_access = pd.read_csv(access_model, sep=";")
   activities = list(df_activity_access.columns[1:]) #activities names without first column (Data Objetcs)
   data_objects = df_activity_access["Data Objects"].tolist()
-
+  
+  unique_cases = set(df_reindexed['concept:name'].unique())
+  if unique_cases != activities:
+    raise KeyError('There are specified activities on Declare model that were not in Access model, please take a look on the Access model to fix it')
 
   activities_access = {}
 

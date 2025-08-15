@@ -1,5 +1,5 @@
 import zipfile
-from flask import Flask, request, send_file  
+from flask import Flask, request, send_file , jsonify
 from flask_cors import CORS  
 import io
 import csv
@@ -32,9 +32,11 @@ def process_csvs():
         decl_path = tmp_decl.name
         declare.save(tmp_decl)
 
-    process_log, access_log = LogGenerator.generate(traces,min_events,max_events,activities_duration,decl_path,resource_model,access_model)
+    try:
+        process_log, access_log = LogGenerator.generate(traces,min_events,max_events,activities_duration,decl_path,resource_model,access_model)
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
 
-    # Gerar arquivos CSV em memória
     memory_zip = io.BytesIO()
     with zipfile.ZipFile(memory_zip, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
         zf.writestr("process_log.xes", process_log)
