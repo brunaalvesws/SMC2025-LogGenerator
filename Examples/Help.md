@@ -1,14 +1,47 @@
-## Files templates
+## File Templates
 
-To generate some logs, you will need the specified models: Process model, Data Access Model and Organizational Model. The templates for this models are available in the directory "Examples" of this repository. 
+To generate logs, you will need three models: **Process Model**, **Data Access Model**, and **Organizational Model**. Templates for these models are available in the `Examples` directory of this repository.
 
-### Declare Process Model
-The DECLARE template is composed by activities and rules. You can add more activities adding lines in the begining with 'activity' before the activity name. You can add rules adding the Rule name and the activities affected by it followed by optional activation parameters. Some DECLARE rules may not be supported yet.
+---
+
+### Process Model (DECLARE)
+
+The DECLARE template is composed of activities and rules.
+
+* To add more activities, include new lines at the beginning with the keyword `activity` followed by the activity name.
+* To add rules, write the rule name and the activities affected by it, followed by optional activation parameters.
+
+> Note: Some DECLARE rules may not yet be supported.
+
+---
 
 ### Data Access Model
-The first column of this template contains the Data Objects that can be accessed, please, keep the column title 'Data Objects' when customizing your own. The other columns are the activities permited operations to each data object of the first column. Put the activity name in the begining of the column and its permited operations separated by comma, the available operations are c (create), u (update), r (read) and d (delete). Capital letters indicate mandatory operations, small letters indicate optional operation and the absense of the letter indicates the operation is forbidden.
+
+* The **first column** of this template contains the data objects that can be accessed. Please keep the column title as **`Data Objects`** when customizing your own.
+* The **other columns** define the permitted operations of each activity on the data objects listed in the first column.
+
+Use the following notation:
+
+* Place the **activity name** at the top of the column.
+* List the permitted operations separated by commas for each data object:
+
+  * `c` = create
+  * `u` = update
+  * `r` = read
+  * `d` = delete
+
+**Capital letters** indicate mandatory operations, **lowercase letters** indicate optional operations, and the absence of a letter indicates the operation is **forbidden**.
+
+---
 
 ### Organizational Model
-In this template, please do not change the column header, it has the same name of the log columns to make it easier. The first column refers to the case name, so you need to add an profile and resources to each case. Follow the pattern 'case_{number of the case}' starting by 0. Then, in the second column, add a profile name and in the third column, add a resource list for this profile separated by comma.
 
-All the activity names, resources, profiles and data objects can be customized. The generator will warn you if something is not right.
+In this template, do not change the column headers, since they match the log column names for easier processing.
+
+* The **first column** refers to the case name. Add a profile and resources to each case, following the pattern `case_{number}` starting from `case_0`. Remember to verify the number of cases you want to generate.
+* The **second column** specifies the profile name.
+* The **third column** lists the resources for this profile, separated by commas.
+
+---
+
+All activity names, resources, profiles, and data objects can be customized. The generator will issue warnings if something is not valid.
