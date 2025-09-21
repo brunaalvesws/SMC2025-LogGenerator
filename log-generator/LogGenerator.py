@@ -108,7 +108,7 @@ def generate(cases, min_events, max_events, activities_duration, declare_model, 
             ope = op.lower()
             df_access.loc[len(df_access)] = [row['case:concept:name'], key, ope, random_timestamp, row['concept:resource'], row['concept:instance']]
 
-  df_access['lifecycle:transition'] = 'complete'
+  df_access['lifecycle:transition'] = 'begin'
   
   process_log_str = df_reindexed.to_csv(index=False)
   access_log_str = df_access.to_csv(index=False)
