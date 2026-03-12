@@ -5,6 +5,7 @@ import io
 import LogGenerator
 import tempfile
 import json
+from pm4py.objects.log.exporter.xes import exporter
 
   
 app = Flask(__name__)  
@@ -38,8 +39,8 @@ def process_csvs():
 
     memory_zip = io.BytesIO()
     with zipfile.ZipFile(memory_zip, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr("process_log.xes", process_log)
-        zf.writestr("access_log.xes", access_log)
+        zf.writestr("process_log.xes", exporter.serialize(process_log))
+        zf.writestr("access_log.xes", exporter.serialize(access_log))
 
     memory_zip.seek(0)
     return send_file(
