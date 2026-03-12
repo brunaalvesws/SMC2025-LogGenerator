@@ -110,4 +110,7 @@ def generate(cases, min_events, max_events, activities_duration, declare_model, 
 
   df_access['lifecycle:transition'] = 'begin'
   
+  df_reindexed["@@case_index"] = df_reindexed.groupby("case:concept:name").ngroup()
+  df_access["@@case_index"] = df_access.groupby("case:concept:name").ngroup()
+  
   return df_reindexed, df_access
