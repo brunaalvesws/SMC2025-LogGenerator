@@ -91,7 +91,7 @@ def generate(cases, min_events, max_events, activities_duration, declare_model, 
 
   df_access = pd.DataFrame()
   df_access['case:concept:name'] = 0
-  df_access['concept:dataobj'] = ''
+  df_access['concept:name'] = ''
   df_access['concept:operation'] = ''
   df_access['time:timestamp'] = 0
   df_access['concept:resource'] = ''
